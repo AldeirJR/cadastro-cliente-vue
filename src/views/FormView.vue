@@ -4,9 +4,9 @@
     <div class="form-wrapper">
       <h1>Formulário de Cadastro</h1>
       <form @submit.prevent="handleSubmit">
-        <!-- Nome -->
+        <!-- Campo Nome -->
         <div class="form-group" :class="{ 'form-group--invalid': isNomeInvalid }">
-          <label for="nome"></label>
+          <label for="nome">Nome</label>
           <input
             type="text"
             id="nome"
@@ -14,13 +14,12 @@
             placeholder="Nome completo (sem abreviações)"
             required
           />
-          <!-- Mensagem de erro caso seja inválido -->
           <p v-if="isNomeInvalid" class="error-message">
             Campo deve conter 3 caracteres ou mais
           </p>
         </div>
 
-        <!-- CPF -->
+        <!-- Campo CPF (somente números) -->
         <div class="form-group">
           <label for="cpf">CPF</label>
           <input
@@ -28,11 +27,12 @@
             id="cpf"
             v-model="cpf"
             placeholder="Ex.: 000.000.000-00"
+            @input="onlyNumbers(cpf)"
             required
           />
         </div>
 
-        <!-- Telefone -->
+        <!-- Campo Telefone (somente números) -->
         <div class="form-group">
           <label for="telefone">Telefone</label>
           <input
@@ -40,11 +40,12 @@
             id="telefone"
             v-model="telefone"
             placeholder="Ex.: (00) 99999-9999"
+            @input="onlyNumbers(telefone)"
             required
           />
         </div>
 
-        <!-- Email -->
+        <!-- Campo E-mail -->
         <div class="form-group">
           <label for="email">E-mail</label>
           <input
@@ -56,7 +57,7 @@
           />
         </div>
 
-        <!-- Botão -->
+        <!-- Botão Cadastrar -->
         <button 
           type="submit" 
           class="btn-submit"
@@ -81,13 +82,17 @@ const cpf = ref('')
 const telefone = ref('')
 const email = ref('')
 
-// Validação simples do campo "Nome completo": mínimo de 3 caracteres
+// Validação simples para o campo "Nome completo": mínimo 3 caracteres
 const isNomeInvalid = computed(() => {
   return nome.value.length > 0 && nome.value.length < 3
 })
 
+// Função para filtrar apenas números
+function onlyNumbers(refField) {
+  refField.value = refField.value.replace(/\D/g, '')
+}
+
 function handleSubmit() {
-  // Se o nome estiver inválido, não prossegue
   if (isNomeInvalid.value) return
 
   const novoCadastro = {
@@ -108,22 +113,22 @@ function handleSubmit() {
   telefone.value = ''
   email.value = ''
 
-  // Redireciona para a listagem (opcional)
+ 
   router.push('/list')
 }
 </script>
 
 <style scoped>
-
+/* Guia de estilo para inputs conforme solicitado */
+/* Container centralizado ocupando a altura total */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* preenche toda a altura da viewport */
+  height: 100vh;
   background-color: #f5f5f5;
   margin: 0;
   padding: 0;
-   
 }
 
 /* Card do formulário */
@@ -149,10 +154,10 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-/* Classe para estado inválido */
+/* Estado inválido para o input */
 .form-group--invalid input {
-  color: #eb4a46 !important; /* força a cor do texto */
-  border-bottom: 1px solid #eb4a46 !important; /* borda vermelha */
+  color: #eb4a46 !important;
+  border-bottom: 1px solid #eb4a46 !important;
 }
 
 /* Mensagem de erro */
@@ -162,7 +167,7 @@ h1 {
   margin-top: 0.3rem;
 }
 
-/* Label */
+/* Labels */
 label {
   display: block;
   font-weight: 600;
@@ -170,27 +175,27 @@ label {
   color: #555;
 }
 
-/* Inputs: borda inferior e cores conforme o guia */
+/* Inputs com borda inferior e cores conforme o guia */
 input[type="text"],
 input[type="email"] {
   width: 100%;
   border: none;
-  border-bottom: 1px solid #efeedd; /* cor da borda sem foco */
+  border-bottom: 1px solid #efeedd;
   padding: 0.5rem 0;
   font-size: 1rem;
   outline: none;
-  color: #efeedd; /* cor do texto sem foco */
+  color: #efeedd;
   transition: color 0.3s, border-color 0.3s;
 }
 
-/* Foco no input */
+/* Ao focar, altera para cores definidas */
 input[type="text"]:focus,
 input[type="email"]:focus {
-  color: #333333;               /* cor do texto ao focar */
-  border-bottom-color: #333333; /* cor da borda ao focar */
+  color: #333333;
+  border-bottom-color: #333333;
 }
 
-/* Placeholder alinhado à esquerda (opcional) */
+/* Placeholder alinhado à esquerda */
 ::placeholder {
   text-align: left;
 }
@@ -208,7 +213,7 @@ input[type="email"]:focus {
   transition: background-color 0.3s;
 }
 
-/* Hover do botão */
+/* Hover no botão */
 .btn-submit:hover:not(:disabled) {
   background-color: #00ab90;
 }

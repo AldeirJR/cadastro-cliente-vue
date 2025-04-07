@@ -24,7 +24,7 @@ import { ref, onMounted } from 'vue'
 
 const cadastros = ref([])
 
-// Função para buscar dados da API e armazenar em localStorage (opcional)
+// Função para buscar dados da API e armazenar em localStorage 
 async function carregarDadosDaAPI() {
   try {
     const response = await fetch('https://private-9d65b3-tinnova.apiary-mock.com/users')
@@ -59,10 +59,10 @@ onMounted(async () => {
   const localData = localStorage.getItem('cadastros')
 
   if (localData) {
-    
+ 
     cadastros.value = JSON.parse(localData)
   } else {
-   
+    
     await carregarDadosDaAPI()
   }
 })
