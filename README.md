@@ -1,5 +1,20 @@
-# Vue 3 + Vite
+# Projeto de Cadastro com Vue.js
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Este projeto é uma aplicação simples de cadastro utilizando Vue.js (Vue 3) e Vue Router. A aplicação permite:
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+- Cadastrar usuários (com campos: Nome, CPF, Telefone e Email);
+- Listar os cadastros existentes;
+- Editar e excluir registros;
+- Persistir os dados no `localStorage`;
+- Buscar dados iniciais de uma API .
+- 
+  Pré requisitos:
+- [Node.js](https://nodejs.org/) (versão recomendada: 14 ou superior)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+
+  Instalação do projeto :
+  Acesse a pasta do projeto  e execute o comando :
+  npm install
+  Execuçãodo projeto :
+  npm run dev
+
