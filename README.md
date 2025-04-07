@@ -12,9 +12,9 @@ Este projeto é uma aplicação simples de cadastro utilizando Vue.js (Vue 3) e 
 - [Node.js](https://nodejs.org/) (versão recomendada: 14 ou superior)
 - [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
 
-  Instalação do projeto :
+  #Instalação do projeto :
   Acesse a pasta do projeto  e execute o comando :
   npm install
-  Execuçãodo projeto :
+  #Execução do projeto :
   npm run dev
 
