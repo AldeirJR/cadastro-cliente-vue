@@ -4,36 +4,65 @@
     <div class="form-wrapper">
       <h1>Formulário de Cadastro</h1>
       <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label for="nome">Nome completo:</label>
-          <input type="text" id="nome" v-model="nome" required />
+        <!-- Nome -->
+        <div class="form-group" :class="{ 'form-group--invalid': isNomeInvalid }">
+          <label for="nome"></label>
+          <input
+            type="text"
+            id="nome"
+            v-model="nome"
+            placeholder="Nome completo (sem abreviações)"
+            required
+          />
+          <!-- Mensagem de erro caso seja inválido -->
+          <p v-if="isNomeInvalid" class="error-message">
+            Campo deve conter 3 caracteres ou mais
+          </p>
         </div>
 
+        <!-- CPF -->
         <div class="form-group">
-          <label for="cpf">CPF:</label>
-          <input type="text" id="cpf" v-model="cpf" required />
+          <label for="cpf">CPF</label>
+          <input
+            type="text"
+            id="cpf"
+            v-model="cpf"
+            placeholder="Ex.: 000.000.000-00"
+            required
+          />
         </div>
 
+        <!-- Telefone -->
         <div class="form-group">
-          <label for="telefone">Telefone:</label>
-          <input type="text" id="telefone" v-model="telefone" required />
+          <label for="telefone">Telefone</label>
+          <input
+            type="text"
+            id="telefone"
+            v-model="telefone"
+            placeholder="Ex.: (00) 99999-9999"
+            required
+          />
         </div>
 
+        <!-- Email -->
         <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="email" required />
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="seuemail@exemplo.com"
+            required
+          />
         </div>
 
-        <!-- Botão que muda conforme o estado (normal, hover, disabled, loading) -->
-        <button
-          type="submit"
+        <!-- Botão -->
+        <button 
+          type="submit" 
           class="btn-submit"
-          :disabled="loading"
-          :class="{ loading: loading }"
+          :disabled="isNomeInvalid"
         >
-          <!-- Se estiver carregando, mostra o spinner. Se não, mostra "Cadastrar" -->
-          <span v-if="!loading">Cadastrar</span>
-          <span v-else class="loader"></span>
+          Cadastrar
         </button>
       </form>
     </div>
@@ -41,77 +70,63 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// Estados do formulário
+// Campos do formulário
 const nome = ref('')
 const cpf = ref('')
 const telefone = ref('')
 const email = ref('')
 
-// Flag para controlar o estado de loading do botão
-const loading = ref(false)
+// Validação simples do campo "Nome completo": mínimo de 3 caracteres
+const isNomeInvalid = computed(() => {
+  return nome.value.length > 0 && nome.value.length < 3
+})
 
-// Função para salvar dados no localStorage
-async function handleSubmit() {
-  // Ativa o estado de loading
-  loading.value = true
+function handleSubmit() {
+  // Se o nome estiver inválido, não prossegue
+  if (isNomeInvalid.value) return
 
-  // Simulando um pequeno delay para exibir o loading (por exemplo, 1.5s)
-  // Em uma aplicação real, você faria requisições HTTP ou outra lógica assíncrona.
-  setTimeout(() => {
-    // Cria o objeto a ser salvo
-    const novoCadastro = {
-      id: Date.now(),
-      nome: nome.value,
-      cpf: cpf.value,
-      telefone: telefone.value,
-      email: email.value
-    }
+  const novoCadastro = {
+    id: Date.now(),
+    nome: nome.value,
+    cpf: cpf.value,
+    telefone: telefone.value,
+    email: email.value
+  }
 
-    // Salva no localStorage
-    const cadastrosSalvos = JSON.parse(localStorage.getItem('cadastros')) || []
-    cadastrosSalvos.push(novoCadastro)
-    localStorage.setItem('cadastros', JSON.stringify(cadastrosSalvos))
+  const cadastrosSalvos = JSON.parse(localStorage.getItem('cadastros')) || []
+  cadastrosSalvos.push(novoCadastro)
+  localStorage.setItem('cadastros', JSON.stringify(cadastrosSalvos))
 
-    // Limpa os campos
-    nome.value = ''
-    cpf.value = ''
-    telefone.value = ''
-    email.value = ''
+  // Limpa os campos
+  nome.value = ''
+  cpf.value = ''
+  telefone.value = ''
+  email.value = ''
 
-    // Desativa o loading
-    loading.value = false
-
-    // (Opcional) Redireciona para a listagem
-    router.push('/list')
-  }, 1500)
+  // Redireciona para a listagem (opcional)
+  router.push('/list')
 }
 </script>
 
 <style scoped>
-/* 
-   Guia de estilo para o botão:
-   - Normal: fundo #00c8b3, fonte #ffffff
-   - Hover: opacidade 70%
-   - Disabled: fundo #f6f6f6, fonte #dddadc
-   - Loading: exibe spinner
-*/
 
-/* Container centralizado */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  height: 100vh; /* preenche toda a altura da viewport */
   background-color: #f5f5f5;
-  padding: 1rem;
+  margin: 0;
+  padding: 0;
+   
 }
 
-/* Card que envolve o formulário */
+/* Card do formulário */
 .form-wrapper {
   background-color: #fff;
   padding: 2rem;
@@ -134,7 +149,20 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-/* Labels dos campos */
+/* Classe para estado inválido */
+.form-group--invalid input {
+  color: #eb4a46 !important; /* força a cor do texto */
+  border-bottom: 1px solid #eb4a46 !important; /* borda vermelha */
+}
+
+/* Mensagem de erro */
+.error-message {
+  font-size: 0.9rem;
+  color: #eb4a46;
+  margin-top: 0.3rem;
+}
+
+/* Label */
 label {
   display: block;
   font-weight: 600;
@@ -142,66 +170,52 @@ label {
   color: #555;
 }
 
-/* Inputs com borda apenas na parte inferior */
+/* Inputs: borda inferior e cores conforme o guia */
 input[type="text"],
 input[type="email"] {
   width: 100%;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #efeedd; /* cor da borda sem foco */
   padding: 0.5rem 0;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.3s;
+  color: #efeedd; /* cor do texto sem foco */
+  transition: color 0.3s, border-color 0.3s;
 }
 
+/* Foco no input */
 input[type="text"]:focus,
 input[type="email"]:focus {
-  border-bottom-color: #00c8b3;
+  color: #333333;               /* cor do texto ao focar */
+  border-bottom-color: #333333; /* cor da borda ao focar */
 }
 
-/* ---------------------- */
-/* Estilos do botão      */
-/* ---------------------- */
+/* Placeholder alinhado à esquerda (opcional) */
+::placeholder {
+  text-align: left;
+}
+
+/* Botão de cadastro */
 .btn-submit {
   width: 100%;
-  background-color: #00c8b3; /* cor de fundo normal */
-  color: #ffffff;           /* cor do texto normal */
+  background-color: #00c8b3;
+  color: #fff;
   border: none;
   padding: 0.75rem;
   font-size: 1rem;
   border-radius: 30px;
   cursor: pointer;
-  transition: opacity 0.3s, background-color 0.3s;
+  transition: background-color 0.3s;
 }
 
-/* Hover: opacidade de 70% (0.7) */
+/* Hover do botão */
 .btn-submit:hover:not(:disabled) {
-  opacity: 0.7;
+  background-color: #00ab90;
 }
 
-/* Disabled: fundo #f6f6f6 e fonte #dddadc */
+/* Botão desabilitado */
 .btn-submit:disabled {
-  background-color: #f6f6f6;
-  color: #dddadc;
   cursor: not-allowed;
-}
-
-/* Spinner de loading */
-.loader {
-  display: inline-block;
-  width: 1.4rem;
-  height: 1.4rem;
-  border: 3px solid #ffffff;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  vertical-align: middle;
-}
-
-/* Animação do spinner */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  opacity: 0.6;
 }
 </style>
